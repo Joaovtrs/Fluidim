@@ -1,7 +1,7 @@
 import os
 
 from loguru import logger
-from PySide6.QtWidgets import QFileDialog, QMenuBar
+from PySide6.QtWidgets import QFileDialog, QMenuBar, QMessageBox
 
 from sistema import sistema
 
@@ -41,17 +41,38 @@ class MainMenuBar(QMenuBar):
     def atualizar():
         logger.log('METHOD', 'Chamando função "MainMenuBar.atualizar"')
 
-    @staticmethod
-    def func_arq_novo():
+    def pop_up(self, texto):
+        logger.log('METHOD', 'Chamando função "MainMenuBar.pop_up"')
+
+        pop_up_excluir = QMessageBox(self)
+        pop_up_excluir.setWindowTitle('Aviso')
+        pop_up_excluir.setText(texto)
+        pop_up_excluir.setInformativeText(
+            'Todas as alterações não salvas serão perdidas'
+        )
+        pop_up_excluir.setIcon(QMessageBox.Warning)
+        pop_up_excluir.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
+        pop_up_excluir.setButtonText(QMessageBox.No, 'Não')
+        pop_up_excluir.setButtonText(QMessageBox.Yes, 'Sim')
+        pop_up_excluir.setDefaultButton(QMessageBox.No)
+
+        return pop_up_excluir.exec()
+
+    def func_arq_novo(self):
         logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_novo"')
 
-        sistema.novo()
+        resp = self.pop_up('Deseja criar um novo arquivo?')
+
+        if resp == QMessageBox.Yes:
+            sistema.novo()
+            self.func_atualizar()
 
     def func_arq_salvar(self):
         logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_salvar"')
 
         if sistema.caminho is not None:
             sistema.salvar()
+            self.func_atualizar()
         else:
             self.func_arq_salvar_como()
 
@@ -77,15 +98,18 @@ class MainMenuBar(QMenuBar):
     def func_arq_abrir(self):
         logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_abrir"')
 
-        caminho = QFileDialog.getOpenFileName(
-            parent=self,
-            caption='Abrir',
-            filter='*.fluid',
-            dir=desktop
-        )
+        resp = self.pop_up('Deseja abrir outro arquivo?')
 
-        if caminho[0]:
-            sistema.abrir(caminho[0])
-            self.func_atualizar()
-        else:
-            logger.warning('Nenhum caminho selecionado')
+        if resp == QMessageBox.Yes:
+            caminho = QFileDialog.getOpenFileName(
+                parent=self,
+                caption='Abrir',
+                filter='*.fluid',
+                dir=desktop
+            )
+
+            if caminho[0]:
+                sistema.abrir(caminho[0])
+                self.func_atualizar()
+            else:
+                logger.warning('Nenhum caminho selecionado')
