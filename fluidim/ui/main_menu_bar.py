@@ -43,9 +43,13 @@ class MainMenuBar(QMenuBar):
 
     @staticmethod
     def func_arq_novo():
+        logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_novo"')
+
         sistema.novo()
 
     def func_arq_salvar(self):
+        logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_salvar"')
+
         if sistema.caminho is not None:
             sistema.salvar()
         else:
