@@ -10,7 +10,12 @@ python = ">=3.11,<3.12"
 pyside6 = "^6.6.1"
 loguru = "^0.7.2"
 pyqtdarktheme = "^2.1.0"
+matplotlib = "^3.8.2"
+networkx = "^3.2.1"
 
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]
