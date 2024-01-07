@@ -3,6 +3,8 @@ import os
 from loguru import logger
 from PySide6.QtWidgets import QFileDialog, QMenuBar
 
+from sistema import sistema
+
 desktop = os.path.join(os.path.join(os.environ['USERPROFILE']),
                        'OneDrive\\Área de Trabalho')
 
@@ -16,21 +18,44 @@ class MainMenuBar(QMenuBar):
 
         self.arquivo = self.addMenu('Arquivo')
 
-        self.arq_novo = self.arquivo.addAction('Novo arquivo')
+        self.arq_novo = self.arquivo.addAction('Novo projeto')
         self.arq_novo.setShortcut('Ctrl+N')
 
-        self.arq_abrir = self.arquivo.addAction('Abrir arquivo')
+        self.arq_abrir = self.arquivo.addAction('Abrir projeto')
         self.arq_abrir.setShortcut('Ctrl+O')
 
-        self.arq_novo.triggered.connect(self.criar_arquivo)
-        self.arq_abrir.triggered.connect(self.abrir_arquivo)
+        self.arquivo.addSeparator()
+
+        self.arq_salvar = self.arquivo.addAction('Salvar projeto')
+        self.arq_salvar.setShortcut('Ctrl+S')
+
+        self.arq_salvar_como = self.arquivo.addAction('Salvar projeto como')
+        self.arq_salvar_como.setShortcut('Ctrl+Shift+S')
+
+        self.arq_novo.triggered.connect(self.func_arq_novo)
+        self.arq_abrir.triggered.connect(self.func_arq_abrir)
+        self.arq_salvar.triggered.connect(self.func_arq_salvar)
+        self.arq_salvar_como.triggered.connect(self.func_arq_salvar_como)
 
     @staticmethod
     def atualizar():
         logger.log('METHOD', 'Chamando função "MainMenuBar.atualizar"')
 
-    def criar_arquivo(self):
-        logger.log('METHOD', 'Chamando função "MainMenuBar.criar_arquivo"')
+    @staticmethod
+    def func_arq_novo():
+        sistema.novo()
+
+    def func_arq_salvar(self):
+        if sistema.caminho is not None:
+            sistema.salvar()
+        else:
+            self.func_arq_salvar_como()
+
+    def func_arq_salvar_como(self):
+        logger.log(
+            'METHOD',
+            'Chamando função "MainMenuBar.func_arq_salvar_como"'
+        )
 
         caminho = QFileDialog.getSaveFileName(
             parent=self,
@@ -40,13 +65,13 @@ class MainMenuBar(QMenuBar):
         )
 
         if caminho[0]:
-            # sistema.criar_db(caminho[0])
+            sistema.salvar_como(caminho[0])
             self.func_atualizar()
         else:
             logger.warning('Nenhum caminho selecionado')
 
-    def abrir_arquivo(self):
-        logger.log('METHOD', 'Chamando função "MainMenuBar.abrir_arquivo"')
+    def func_arq_abrir(self):
+        logger.log('METHOD', 'Chamando função "MainMenuBar.func_arq_abrir"')
 
         caminho = QFileDialog.getOpenFileName(
             parent=self,
@@ -56,7 +81,7 @@ class MainMenuBar(QMenuBar):
         )
 
         if caminho[0]:
-            # sistema.abrir_db(caminho[0])
+            sistema.abrir(caminho[0])
             self.func_atualizar()
         else:
             logger.warning('Nenhum caminho selecionado')
