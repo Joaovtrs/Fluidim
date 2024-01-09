@@ -1,8 +1,10 @@
 from loguru import logger
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 from sistema import sistema
 
 from .main_menu_bar import MainMenuBar
+from .main_menu import MainMenu
+from .viewer import Viewer
 
 
 class MainUI(QMainWindow):
@@ -16,6 +18,17 @@ class MainUI(QMainWindow):
 
         self.menu_bar = MainMenuBar(self.atualizar, self)
         self.setMenuBar(self.menu_bar)
+
+        self.main_widget = QWidget(self)
+        self.setCentralWidget(self.main_widget)
+
+        self.main_grid = QHBoxLayout(self.main_widget)
+
+        self.viewer = Viewer(self.atualizar, self.main_widget)
+        self.menu = MainMenu(self.viewer, self.main_widget)
+
+        self.main_grid.addWidget(self.menu)
+        self.main_grid.addWidget(self.viewer)
 
     def atualizar(self):
         logger.log('METHOD', 'Chamando função "MainUI.atualizar"')
