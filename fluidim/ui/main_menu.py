@@ -25,8 +25,16 @@ class MainMenu(QFrame):
         self.separador = QFrame(self)
         self.separador.setFrameShape(QFrame.HLine)
 
-        self.btn_1 = MainManuButton(' Ações', 'icons/acoes.png', self)
-        self.btn_2 = MainManuButton(' 2', None, self)
+        self.btn_conexoes = MainManuButton(
+            ' Conexões',
+            'icons/connection.png',
+            self
+        )
+        self.btn_trechos = MainManuButton(
+            ' Trechos',
+            'icons/algorithm.png',
+            self
+        )
 
         self.spacer = QSpacerItem(
             10, 10, QSizePolicy.Minimum,
@@ -35,12 +43,17 @@ class MainMenu(QFrame):
 
         self.grid.addWidget(self.btn_menu)
         self.grid.addWidget(self.separador)
-        self.grid.addWidget(self.btn_1)
-        self.grid.addWidget(self.btn_2)
+        self.grid.addWidget(self.btn_conexoes)
+        self.grid.addWidget(self.btn_trechos)
         self.grid.addItem(self.spacer)
 
         self.btn_menu.clicked.connect(self.func_btn_menu)
-        # self.btn_1.clicked.connect(lambda: self.viewer.setCurrentIndex(0))
+        self.btn_conexoes.clicked.connect(
+            lambda: self.viewer.setCurrentWidget(self.viewer.view_conexoes)
+        )
+        self.btn_trechos.clicked.connect(
+            lambda: self.viewer.setCurrentWidget(self.viewer.view_trechos)
+        )
 
     def func_btn_menu(self):
         logger.log('METHOD', 'Chamando função "MainMenu.func_btn_menu"')

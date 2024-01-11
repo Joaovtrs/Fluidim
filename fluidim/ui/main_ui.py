@@ -1,9 +1,9 @@
 from loguru import logger
-from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PySide6.QtWidgets import QHBoxLayout, QMainWindow, QWidget
 from sistema import sistema
 
-from .main_menu_bar import MainMenuBar
 from .main_menu import MainMenu
+from .main_menu_bar import MainMenuBar
 from .viewer import Viewer
 
 

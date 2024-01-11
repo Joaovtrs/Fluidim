@@ -2,7 +2,6 @@ import os
 
 from loguru import logger
 from PySide6.QtWidgets import QFileDialog, QMenuBar, QMessageBox
-
 from sistema import sistema
 
 desktop = os.path.join(os.path.join(os.environ['USERPROFILE']),

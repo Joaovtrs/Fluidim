@@ -1,5 +1,6 @@
-from loguru import logger
 import pickle
+
+from loguru import logger
 
 
 class Sistema:
